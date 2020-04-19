@@ -8,7 +8,7 @@ export class UsersController {
     constructor(private usersService: UsersService) {}
 
     @Get()
-    findAll(): User[] {
+    findAll(): Promise<User[]> {
         return this.usersService.findAll();
     }
 
@@ -18,7 +18,7 @@ export class UsersController {
     }
 
     @Get(':email')
-    findOne(@Param() params): User {
-        return this.usersService.findOne(params.email)
+    findOne(@Param() params): Promise<User []> {
+        return this.usersService.findByEmail(params.email)
     }
 }

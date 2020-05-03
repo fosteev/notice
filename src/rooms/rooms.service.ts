@@ -14,6 +14,10 @@ export class RoomsService {
     }
 
     async findById(id: string): Promise<Room> {
-        return this.roomModel.findById(id);
+        try {
+            return await    this.roomModel.findById(id);
+        } catch (e) {
+            return null;
+        }
     }
 }

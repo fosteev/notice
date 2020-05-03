@@ -60,7 +60,7 @@ export class RoomsController {
         for (const key in users) {
             const append = await this.usersService.appendGroup(users[key], group._id.toString());
             if (!append) {
-
+                throw new HttpException('Cannot create room', 500)
             }
         }
 

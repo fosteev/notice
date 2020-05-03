@@ -27,7 +27,11 @@ export class UsersService {
     }
 
     async findById(id: string): Promise<any> {
-        return await this.userModel.findById(id).exec();
+        try {
+            return await this.userModel.findById(id).exec();
+        } catch (e) {
+            return null
+        }
     }
 
     async appendGroup(userId: string, groupId: string): Promise <User []> {

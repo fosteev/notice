@@ -2,23 +2,33 @@ import {Body, Controller, Get, HttpStatus, Param, Post, Res} from '@nestjs/commo
 import {UsersService} from "./users.service";
 import {User} from "./interfaces/user.interface";
 import {CreateUserDto} from "./dto/create-user.dto";
+import {ResultDto} from "../dto/result.dto";
 
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService) {}
 
     @Get()
-    findAll(): Promise<User[]> {
-        return this.usersService.findAll();
+    async findAll(): Promise<ResultDto> {
+        return {
+            message: 'All users',
+            data: await this.usersService.findAll()
+        };
     }
 
     @Post()
-    createUser(@Body() createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto);
+    async createUser(@Body() createUserDto: CreateUserDto): Promise<ResultDto> {
+        return {
+            message: 'Success create user',
+            data: await this.usersService.create(createUserDto)
+        };
     }
 
     @Get(':email')
-    findOne(@Param() params): Promise<User []> {
-        return this.usersService.findByEmail(params.email)
+    async findOne(@Param() params): Promise<ResultDto> {
+        return {
+            message: 'Find user',
+            data: await this.usersService.findByEmail(params.email)
+        }
     }
 }

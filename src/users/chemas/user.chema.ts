@@ -6,5 +6,12 @@ export const UserChema = new mongoose.Schema({
         trim: true,
         unique: true
     },
-    password: String
+
+    password: String,
+
+    rooms: Array,
+
+    friends: Array,
+    NotAllowed: Array,
+    Banned: Array
 });

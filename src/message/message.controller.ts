@@ -16,13 +16,15 @@ import {ResultDto} from "../dto/result.dto";
 import {MessageService} from "./message.service";
 import {CreateMessageDto} from "./dto/create-message.dto";
 import {GetMessageDto} from "./dto/get-message.dto";
+import {ChatGateway} from "./chat.gateway";
 
 @Controller('message')
 export class MessageController {
     constructor(
         private roomsService: RoomsService,
         private usersService: UsersService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private chatGateway: ChatGateway
     ) {}
 
     @Get()
@@ -51,6 +53,10 @@ export class MessageController {
         if (! await this.messageService.create(createMessage)) {
             throw new HttpException('Not push message', 500);
         }
+
+        const data = this.messageService.create(createMessage);
+
+        this.chatGateway.handleMessage(createMessage);
 
         return {
             message: 'Success push message',

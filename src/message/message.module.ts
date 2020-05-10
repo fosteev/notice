@@ -7,6 +7,7 @@ import {MessageController} from "./message.controller";
 import {MessageService} from "./message.service";
 import {RoomChema} from "../rooms/chemas/room.chema";
 import {UserChema} from "../users/chemas/user.chema";
+import {ChatGateway} from "./chat.gateway";
 
 @Module({
     imports: [
@@ -15,6 +16,6 @@ import {UserChema} from "../users/chemas/user.chema";
         MongooseModule.forFeature([{ name: 'User', schema: UserChema }])
     ],
     controllers: [MessageController],
-    providers: [RoomsService, UsersService, MessageService],
+    providers: [RoomsService, UsersService, MessageService, ChatGateway],
 })
 export class MessageModule {}

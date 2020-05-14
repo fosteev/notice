@@ -20,4 +20,10 @@ export class RoomsService {
             return null;
         }
     }
+
+    async getRooms(rooms: []): Promise<any> {
+        return Promise.all(
+            rooms.map(room => this.findById(room))
+        )
+    }
 }

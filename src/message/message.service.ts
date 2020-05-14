@@ -13,7 +13,7 @@ export class MessageService {
              room: createMessageDto.room,
              user: createMessageDto.user,
              text: createMessageDto.text,
-             date: new Date().toDateString()
+             date: Date.now()
          });
 
          return message.save();

@@ -37,6 +37,33 @@ export class RoomsController {
             data: find
         };
     }
+    @Get('user/:user')
+    async findUser(@Param() params): Promise<ResultDto> {
+        try {
+            const find = await this.usersService.findByEmail(params.user);
+
+            if (!find) {
+                return {
+                    message: 'Not find user',
+                    data: []
+                }
+            }
+
+            const rooms = await this.roomsService.getRooms(find.rooms);
+
+            return {
+                message: params.user,
+                data: rooms
+            }
+
+        } catch (e) {
+            return {
+                message: e.message,
+                data: []
+            }
+        }
+
+    }
 
     @Post()
     async create(@Body() createRoomDto: CreateRoomDto): Promise <ResultDto> {

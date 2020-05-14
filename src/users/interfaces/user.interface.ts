@@ -6,5 +6,7 @@ export interface User {
 
     friends: any,
     notAllowed: any,
-    banned: any
+    banned: any,
+
+    _id: string
 }

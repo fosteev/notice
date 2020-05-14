@@ -46,21 +46,27 @@ export class MessageController {
             throw new HttpException('User not found', 400);
         }
 
-        if (! await this.roomsService.findById(createMessage.room)) {
+        const room = await this.roomsService.findById(createMessage.room);
+
+        if (!room) {
             throw new HttpException('Room not found', 400);
+        }
+
+        const accessUsers: string[] = room.users;
+
+        if (!accessUsers.includes(createMessage.user)) {
+            throw new HttpException('Not access room for user', 403);
         }
 
         if (! await this.messageService.create(createMessage)) {
             throw new HttpException('Not push message', 500);
         }
 
-        const data = this.messageService.create(createMessage);
-
         this.chatGateway.handleMessage(createMessage);
 
         return {
             message: 'Success push message',
-            data: this.messageService.create(createMessage)
+            data: []
         }
     }
 }

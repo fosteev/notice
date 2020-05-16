@@ -1,6 +1,6 @@
 import {IsArray, IsEmail, IsJSON, IsNotEmpty} from "class-validator";
 
-export class CreateRoomDto {
+export class PutRoomDto {
     @IsNotEmpty()
     name: string;
 
@@ -8,5 +8,5 @@ export class CreateRoomDto {
     users: string;
 
     @IsNotEmpty()
-    admin: string;
+    user: string;
 }

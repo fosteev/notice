@@ -6,4 +6,7 @@ export class CreateRoomMongoDtoDto {
 
     @IsArray()
     users: [];
+
+    @IsNotEmpty()
+    admin: string;
 }

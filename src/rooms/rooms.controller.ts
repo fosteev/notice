@@ -1,27 +1,26 @@
 import {
     Body,
-    Controller,
-    ForbiddenException,
+    Controller, Delete,
     Get,
     HttpException,
     HttpStatus,
     Param,
-    Post,
-    Query,
-    Res
+    Post, Put,
 } from '@nestjs/common';
 import {RoomsService} from "./rooms.service";
-import {GetRoomDto} from "./dto/get-room.dto";
 import {CreateRoomDto} from "./dto/create-room.dto";
-import {Room} from "./interfaces/room.interface";
 import {UsersService} from "../users/users.service";
 import {ResultDto} from "../dto/result.dto";
+import {PutRoomDto} from "./dto/put-room.dto";
+import {DeleteRoomDto} from "./dto/delete-room.dto";
+import {MessageService} from "../message/message.service";
 
 @Controller('rooms')
 export class RoomsController {
     constructor(
         private roomsService: RoomsService,
-        private usersService: UsersService
+        private usersService: UsersService,
+        private messageService: MessageService
     ) {}
 
     @Get(':room')
@@ -81,7 +80,8 @@ export class RoomsController {
 
         const group = await this.roomsService.create({
             name: createRoomDto.name,
-            users: users
+            users: users,
+            admin: createRoomDto.admin
         });
 
         for (const key in users) {
@@ -95,5 +95,40 @@ export class RoomsController {
             message: 'Success create room',
             data: group
         };
+    }
+
+    @Put(':room')
+    async editRoom(@Param() param, @Body() putRoomDto: PutRoomDto) {
+        const room = await this.roomsService.getRoom(param.room);
+
+        if (!room) {
+            throw new HttpException('Not found room', 404);
+        }
+
+        const {admin} = room;
+
+        if (admin && (putRoomDto.user !== admin)) {
+            throw new HttpException('Forbidden', 403);
+        }
+
+        await this.roomsService.editRoom(room._id, putRoomDto);
+    }
+
+    @Delete(':room')
+    async deleteRoom(@Param() param, @Body() deleteRoomDto: DeleteRoomDto) {
+        const room = await this.roomsService.getRoom(param.room);
+
+        if (!room) {
+            throw new HttpException('Not found room', 404);
+        }
+
+        const {admin} = room;
+
+        if (admin && (deleteRoomDto.user !== admin)) {
+            throw new HttpException('Forbidden', 403);
+        }
+
+        await this.messageService.deleteRoomMessages(room._id);
+        await this.roomsService.deleteRoom(room._id);
     }
 }

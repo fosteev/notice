@@ -5,7 +5,7 @@ import {
     HttpException,
     HttpStatus,
     Param,
-    Post, Put,
+    Post, Put, Query,
 } from '@nestjs/common';
 import {RoomsService} from "./rooms.service";
 import {CreateRoomDto} from "./dto/create-room.dto";
@@ -52,7 +52,7 @@ export class RoomsController {
 
             return {
                 message: params.user,
-                data: rooms
+                data: rooms.filter(v => v)
             }
 
         } catch (e) {
@@ -115,7 +115,7 @@ export class RoomsController {
     }
 
     @Delete(':room')
-    async deleteRoom(@Param() param, @Body() deleteRoomDto: DeleteRoomDto) {
+    async deleteRoom(@Param() param, @Query() deleteRoomDto: DeleteRoomDto) {
         const room = await this.roomsService.getRoom(param.room);
 
         if (!room) {

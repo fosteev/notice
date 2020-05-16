@@ -30,7 +30,9 @@ export class MessageService {
 
             return await this.messageModel.find({
                 room: roomId
-            }).sort('_id').skip(limit * page).limit(limit).exec()
+            }).sort({
+                '_id': -1
+            }).skip(limit * page).limit(limit).exec()
         }  catch (e) {
             return [];
         }

@@ -46,4 +46,10 @@ export class UsersService {
             return null;
         }
     }
+
+    async searchUserByEmail(email: string, limit: number, page: number): Promise<User []> {
+        return await this.userModel.find({email: new RegExp(email, "i")}).sort({
+            '_id': -1
+        }).skip(limit * page).limit(limit).exec();
+    }
 }

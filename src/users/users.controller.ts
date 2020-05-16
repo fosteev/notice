@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpStatus, Param, Post, Query, Res} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Param, Post, Query, Req, Res} from '@nestjs/common';
 import {UsersService} from "./users.service";
 import {User} from "./interfaces/user.interface";
 import {CreateUserDto} from "./dto/create-user.dto";
@@ -42,11 +42,37 @@ export class UsersController {
         };
     }
 
-    @Get(':email')
+    @Get('findByEmail/:email')
     async findOne(@Param() params): Promise<ResultDto> {
         return {
             message: 'Find user',
             data: await this.usersService.findByEmail(params.email)
+        }
+    }
+
+    @Get('search')
+    async searchUsers(@Query() query): Promise<ResultDto> {
+        const {email, limit, page} = query;
+
+        if (!email) {
+            return {
+                message: "Missing parameter",
+                data: []
+            }
+        }
+
+        const users = await this.usersService.searchUserByEmail(
+            email,
+            Number(limit) || 50,
+            Number(page) || 0
+        )
+
+        return {
+            message: "Found users",
+            data: users.map(u => ({
+                email: u.email,
+                _id: u._id
+            }))
         }
     }
 }
